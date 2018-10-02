@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
+# python2
 
 from driver import Driver
 import time
 from get_members import Memberlist
 from get_users import Users
+
+"""
+This script is used to update user statuses (active, passive, ex-member)
+on the old web page (choir.chs.chalmers.se/choir_web/).
+
+NB: This has hardly been tested!
+"""
+
 
 ROLES = {
     # The int refers to the "edit-roles-ID" in the HTML
@@ -35,6 +44,7 @@ ROLES = {
     "Archivist": "32",
     "tour participants": "30",
 }
+
 
 class Account:
     def __init__(self, browser="", base_url="", username="", password="",
