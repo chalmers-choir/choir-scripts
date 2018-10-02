@@ -207,7 +207,6 @@ def generate_password(length=8):
 if __name__ == "__main__":
     browser = "chrome"  # must be chrome or firefox
     base_url = "http://choir.chs.chalmers.se/choir_web/"
-    # username = "anne.schumacher.up@gmail.com"
     username = ""
     password = ""
     memberfile = "Medlemsregistret.csv"

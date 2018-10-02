@@ -1,11 +1,12 @@
-
 # -*- coding: utf-8 -*-
+# python2
 
 import traceback
 from driver import Driver
 from bs4 import BeautifulSoup
 
 """
+This script is used by update_users.
 """
 
 
@@ -16,7 +17,6 @@ class Users:
         if users:
             self.collect_users_from_file(users)
             # self.check_doubles()
-            # self.get_user(u"Anne Schumacher")
 
         else:
             self.base_url = base_url
@@ -24,7 +24,6 @@ class Users:
             self.driver = self.opendriver.driver
 
             self.get_userlist()
-            # self.get_user(u"Anne Schumacher")
             self.check_doubles()
 
             self.opendriver.close()
