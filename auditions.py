@@ -1,22 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 # python3
 
-from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 import re
 import traceback
 from datetime import datetime, time, timedelta
-import time as tm
+from driver import Driver
+
+"""
+This script is used to create auditions on the new web page
+(http://chalmerssangkor.se).
+Uses driver.py
+"""
+
 
 class Auditions:
-    def __init__(self, base_url="", username="", password="", audition_title="",audition_published=False, audition_enabled=True,
-                 audition_capacity="", audition_maximum_spaces="", audition_email="", audition_confirmation_message="",
+    def __init__(self, browser, base_url="", username="", password="", audition_title="",
+                 audition_published=False, audition_enabled=True, audition_capacity="",
+                 audition_maximum_spaces="", audition_email="", audition_confirmation_message="",
                  from_time=time, to_time=time, length=timedelta, dates=[]):
         self.base_url = base_url
-        self.username = username
-        self.password = password
         self.audition_title = audition_title
         self.audition_published = audition_published
         self.audition_enabled = audition_enabled
@@ -29,33 +33,11 @@ class Auditions:
         self.length = length
         self.dates = dates
 
-        self.setUp()
-        self.auditions()
-        self.tearDown()
+        self.opendriver = Driver(browser=browser, base_url=base_url, username=username, password=password)
+        self.driver = self.opendriver.driver
 
-    def setUp(self):
-        """Sets up the webdriver.
-        """
-        self.driver = webdriver.Chrome()
-        #self.driver.set_window_size(1400,1000)
-        #self.driver.implicitly_wait(10)
-
-    def auditions(self):
-        self.login()
         self.create_auditions()
-        self.logout()
-
-    def login(self):
-        """Logs in the user.
-        """
-
-        driver = self.driver
-        driver.get(self.base_url + "/user/")
-        driver.find_element_by_id("edit-name").clear()
-        driver.find_element_by_id("edit-name").send_keys(self.username)
-        driver.find_element_by_id("edit-pass").clear()
-        driver.find_element_by_id("edit-pass").send_keys(self.password)
-        driver.find_element_by_id("edit-submit").click()
+        self.opendriver.close()
 
     def create_auditions(self):
         """Takes dates and times to generate parameters to send to create_audition() for creating node and set
@@ -63,9 +45,8 @@ class Auditions:
 
         For each date we generate auditions with the specified length between 'from_time` and `to_time`.
         """
-
         for date in self.dates:
-            #Constructing datetimes for when auditions for the day starts and ends.
+            # Constructing datetimes for when auditions for the day starts and ends.
             current_datetime = datetime.combine(datetime.strptime(date, '%Y-%m-%d'), self.from_time)
             day_end = datetime.combine(datetime.strptime(date, '%Y-%m-%d'), self.to_time)
 
@@ -91,7 +72,6 @@ class Auditions:
     def create_audition(self, start_time, end_time):
         """Creates a single audition node and sets registration settings.
         """
-
         driver = self.driver
         driver.get(self.base_url + "/node/add/audition")
 
@@ -131,36 +111,26 @@ class Auditions:
             .search(driver.find_element_by_css_selector("div.messages.status").text),\
             "Could not save registration settings"
 
-    def logout(self):
-        """Logs out current user.
-        """
-
-        driver = self.driver
-        driver.get(self.base_url + "/user/logout")
-
-    def tearDown(self):
-        """Shuts down webdriver.
-        """
-
-        self.driver.quit()
 
 if __name__ == "__main__":
-    c_base_url = "http://chalmerssangkor.se"
-    c_username = ""
-    c_password = ""
-    c_audition_title = "Audition"
-    c_audition_published = False
-    c_audition_enabled = True
-    c_audition_capacity = "1"
-    c_audition_maximum_spaces = "1"
-    c_audition_email = "vice@choir.chs.chalmers.se"
-    c_audition_confirmation_message = "Registration has been saved."
+    browser = "chrome"  # must be chrome or firefox
+    base_url = "http://chalmerssangkor.se"
+    username = ""
+    password = ""
+    audition_title = "Audition"
+    audition_published = False
+    audition_enabled = True
+    audition_capacity = "1"
+    audition_maximum_spaces = "1"
+    audition_email = "vice@choir.chs.chalmers.se"
+    audition_confirmation_message = "Registration has been saved."
 
-    c_from_time = time(19, 45)
-    c_to_time = time(21, 00)
-    c_length = timedelta(minutes=15)
-    c_dates = ['2018-09-03', '2018-09-04', '2018-09-05', '2018-09-07', '2018-09-10', '2018-09-11', '2018-09-12']
+    from_time = time(19, 45)
+    to_time = time(21, 00)
+    length = timedelta(minutes=15)
+    dates = ['2018-09-03', '2018-09-04', '2018-09-05', '2018-09-07', '2018-09-10', '2018-09-11', '2018-09-12']
 
-    auditions = Auditions(c_base_url, c_username, c_password, c_audition_title, c_audition_published, c_audition_enabled, c_audition_capacity,
-                          c_audition_maximum_spaces, c_audition_email, c_audition_confirmation_message, c_from_time, c_to_time,
-                          c_length, c_dates)
+    auditions = Auditions(browser, base_url, username, password, audition_title,
+                          audition_published, audition_enabled, audition_capacity,
+                          audition_maximum_spaces, audition_email, audition_confirmation_message,
+                          from_time, to_time, length, dates)

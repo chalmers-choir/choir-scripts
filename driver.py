@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from selenium import webdriver
-import time
 
 
 class Driver:
@@ -12,6 +11,7 @@ class Driver:
         self.password = password
         self.setUp(browser)
         self.login()
+        # import time
         # time.sleep(30)
 
     def setUp(self, browser):
@@ -21,6 +21,8 @@ class Driver:
             self.driver = webdriver.Chrome()
         elif browser.lower() == "firefox":
             self.driver = webdriver.Firefox()
+        # self.driver.set_window_size(1400,1000)
+        # self.driver.implicitly_wait(10)
 
     def login(self):
         """Log in the user."""
