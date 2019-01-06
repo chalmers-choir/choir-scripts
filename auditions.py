@@ -59,7 +59,7 @@ class Auditions:
                 except Exception as e:
                     print('Could not create audition between dates:')
                     print(audition_start + ' and ' + audition_end)
-                    print(e.message)
+                    print(e)
                     print(traceback.format_exc())
                     print
                 else:
@@ -84,7 +84,8 @@ class Auditions:
         driver.find_element_by_id("edit-field-custom-auditions-time-und-0-value-date").send_keys(start_time)
         driver.find_element_by_id("edit-field-custom-auditions-time-und-0-value2-date").clear()
         driver.find_element_by_id("edit-field-custom-auditions-time-und-0-value2-date").send_keys(end_time)
-        driver.find_element_by_xpath("//li[6]/a/strong").click()
+        #driver.find_element_by_xpath("//li[6]/a/strong").click()
+        driver.find_element_by_xpath('//*[@id="audition-node-form"]/div/div[6]/ul/li[5]').click()
         if driver.find_element_by_id("edit-status").is_selected() != self.audition_published:
             driver.find_element_by_id("edit-status").click()
         driver.find_element_by_id("edit-submit").click()
